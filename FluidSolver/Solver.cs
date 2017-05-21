@@ -143,19 +143,19 @@ namespace FluidSolver
         /// </summary>
         public void Step()
         {
-            advect_vel_RK2(ref vel_x, ref vel_y, ref vel_z, ref vel_x_prev, ref vel_y_prev, ref vel_z_prev, ref obstacles);
+            advect_vel_RK2(vel_x, vel_y, vel_z, vel_x_prev, vel_y_prev, vel_z_prev, obstacles);
             //Bouyance should be considered an external force and should be applied immediately after velocity advection
-            buoyancy(ref vel_y, heat);
+            buoyancy(vel_y, heat);
             //Need to advect heat
-            advect_RK2(ref heat, ref heat_prev, ref vel_x, ref vel_y, ref vel_z, ref obstacles);
+            advect_RK2(heat, heat_prev, vel_x, vel_y, vel_z, obstacles);
             //maybe damp it too
             
-            project(ref vel_x, ref vel_y, ref vel_z, ref divergence, ref pressure, ref pressure_prev, ref obstacles);
+            project(vel_x, vel_y, vel_z, divergence, pressure, pressure_prev, obstacles);
 
-            advect_RK2(ref density, ref density_prev, ref vel_x, ref vel_y, ref vel_z, ref obstacles);
+            advect_RK2(density, density_prev, vel_x, vel_y, vel_z, obstacles);
 
             if (vorticity)
-                vorticity_confinement(ref vel_x, ref vel_y, ref vel_z, ref vel_x_prev, ref vel_y_prev, ref vel_z_prev);
+                vorticity_confinement(vel_x, vel_y, vel_z, vel_x_prev, vel_y_prev, vel_z_prev);
 
             SWAP(vel_x, vel_x_prev);
             SWAP(vel_y, vel_y_prev);
@@ -165,9 +165,9 @@ namespace FluidSolver
 
         #region simulation functions
 
-        private void advect_vel_RK2(ref float[] x, ref float[] y, ref float[] z,
-                                     ref float[] x_prev, ref float[] y_prev, ref float[] z_prev,
-                                     ref int[] obs)
+        private void advect_vel_RK2(float[] x, float[] y, float[] z,
+                                     float[] x_prev, float[] y_prev, float[] z_prev,
+                                     int[] obs)
         {
             for (int k = 0; k < NZ; k++)
             {
@@ -222,9 +222,9 @@ namespace FluidSolver
             }
         }
 
-        private void advect_RK2(ref float[] q, ref float[] q_prev,
-                                 ref float[] x_prev, ref float[] y_prev, ref float[] z_prev,
-                                 ref int[] obs
+        private void advect_RK2(float[] q, float[] q_prev,
+                                 float[] x_prev, float[] y_prev, float[] z_prev,
+                                 int[] obs
             )
         {
             for (int k = 0; k < NZ; k++)
@@ -278,7 +278,7 @@ namespace FluidSolver
             }
         }
 
-        private void buoyancy (ref float[] x, float[] temp)
+        private void buoyancy (float[] x, float[] temp)
         {
             float Tamb = 0f; //ambient temp
             float a = 0.0000625f;
@@ -290,17 +290,17 @@ namespace FluidSolver
             }
         }
 
-        private void project (ref float[] x, ref float[] y, ref float[] z, ref float[] divergence,
-                              ref float[] pressure, ref float[] pressure_prev, ref int[] obs)
+        private void project (float[] x, float[] y, float[] z, float[] divergence,
+                              float[] pressure, float[] pressure_prev, int[] obs)
         {
-            calc_divergence_with_obs(ref divergence, x, y, z, obs);
-            pressure_solve(ref pressure, pressure_prev, divergence, obs);
-            pressure_apply_with_obs(ref x, ref y, ref z, pressure, obs);
+            calc_divergence_with_obs(divergence, x, y, z, obs);
+            pressure_solve(pressure, pressure_prev, divergence, obs);
+            pressure_apply_with_obs(x, y, z, pressure, obs);
             //check_divergence(x, y, z);
         }
 
-        private void vorticity_confinement (ref float[] x, ref float[] y, ref float[] z,
-                                            ref float[] x_prev, ref float[] y_prev, ref float[] z_prev)
+        private void vorticity_confinement (float[] x, float[] y, float[] z,
+                                            float[] x_prev, float[] y_prev, float[] z_prev)
         {
             Vector3 curl;
             Vector3 curl_xplus1, curl_xminus1;
@@ -407,7 +407,7 @@ namespace FluidSolver
             return xTriLerp;
         }
         
-        private void calc_divergence_with_obs (ref float[] divergence, float[] x, float[] y, float[] z, int[] obs)
+        private void calc_divergence_with_obs (float[] divergence, float[] x, float[] y, float[] z, int[] obs)
         {
             for(int k = 0; k < NZ; k++)
             {
@@ -433,7 +433,7 @@ namespace FluidSolver
             }
         }
         
-        private void pressure_solve (ref float[] pressure, float[] pressure_prev, float[] divergence, int[] obs)
+        private void pressure_solve (float[] pressure, float[] pressure_prev, float[] divergence, int[] obs)
         {
             for (int i = 0; i < array_size; i++)
                 pressure[i] = 0f;
@@ -480,7 +480,7 @@ namespace FluidSolver
         }
 
         //pressure_apply_with_obstacles(x, y, z, pressure, obs, dt);
-        private void pressure_apply_with_obs (ref float[] x, ref float[] y, ref float[] z,
+        private void pressure_apply_with_obs (float[] x, float[] y, float[] z,
                                               float[] pressure, int[] obs)
         {
             for(int k = 0; k < NZ; k++)
