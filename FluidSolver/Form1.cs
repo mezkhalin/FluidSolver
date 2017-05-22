@@ -76,6 +76,7 @@ namespace FluidSolver
 
         private void Timer_Tick(object sender, EventArgs e)
         {
+            HandleInput(solver.DensityFieldPrev, solver.VelXPrev, solver.VelYPrev);
             solver.Step();
             fluidControl.Render(solver.DensityField, solver);
             /*HandleInput(fs.df_prev, fs.vx_prev, fs.vy_prev);
@@ -83,9 +84,9 @@ namespace FluidSolver
             fluidControl.Render(fs.df);*/
         }
 
-        private void HandleInput (float[] d, float[]x, float[] y)
+        private void HandleInput (float[] d, float[] x, float[] y)
         {
-            /*for (int i = 0; i < d.Length; i++) { d[i] = x[i] = y[i] = 0f; }
+            //solver.setup_sources_and_forces();
 
             if (!fluidControl.MouseIsDown) return;
 
@@ -96,13 +97,13 @@ namespace FluidSolver
             if (MouseButtons == MouseButtons.Left)
             {
                 Point vel = fluidControl.MouseVelocity();
-                x[FluidSolver.I(pos.X, pos.Y, Params.Height)] = vel.X * 5f;
-                y[FluidSolver.I(pos.X, pos.Y, Params.Height)] = vel.Y * 5f;
+                x[solver.IX(pos.X, pos.Y, 0)] = vel.X * Params.Force;
+                y[solver.IX(pos.X, pos.Y, 0)] = vel.Y * Params.Force;
             }
             else if (MouseButtons == MouseButtons.Right)
             {
-                d[FluidSolver.I(pos.X, pos.Y, Params.Height)] = 10f;
-            }*/
+                d[solver.IX(pos.X, pos.Y, 0)] = Params.Source;
+            }
         }
 
         private Point trans_point(Point p)
@@ -114,7 +115,7 @@ namespace FluidSolver
             return p;
         }
 
-        #region Toolstip Handlers
+        #region Toolstrip Handlers
 
         private void toolStripNew_Click(object sender, EventArgs e)
         {

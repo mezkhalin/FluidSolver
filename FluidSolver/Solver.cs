@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 
 /// <summary>
 /// TODO:
+/// CHECK FOR_EACH VERSUS FOR_EACH_INTERNAL
 /// replace clamp function with inline MinMax statements
-/// 
+/// move initializing of vars from inside for_each to outside
 /// </summary>
 
 namespace FluidSolver
@@ -28,6 +29,9 @@ namespace FluidSolver
     public class Solver
     {
         public float[] DensityField { get { return density; } }
+        public float[] DensityFieldPrev { get { return density_prev; } }
+        public float[] VelXPrev { get { return vel_x_prev; } }
+        public float[] VelYPrev { get { return vel_y_prev; } }
 
         private int NX, NY, NZ; // number of cells
         private IntPos dims;    // total dimensions
@@ -67,7 +71,7 @@ namespace FluidSolver
         public static float Clamp(float x, float min, float max) { return Math.Min(Math.Max(x, min), max); }
         public static int Clamp(int x, int min, int max) { return Math.Min(Math.Max(x, min), max); }
 
-        public static void SWAP(float[] a, float[] b)
+        public static void SWAP(ref float[] a, ref float[] b)
         {
             float[] tmp = a;
             a = b;
@@ -134,7 +138,6 @@ namespace FluidSolver
             compressibility = new float[array_size];
             divergence  = new float[array_size];
             obstacles   = new int[array_size];
-
         }
 
         /// <summary>
@@ -157,10 +160,10 @@ namespace FluidSolver
             if (vorticity)
                 vorticity_confinement(vel_x, vel_y, vel_z, vel_x_prev, vel_y_prev, vel_z_prev);
 
-            SWAP(vel_x, vel_x_prev);
-            SWAP(vel_y, vel_y_prev);
-            SWAP(density, density_prev);
-            SWAP(heat, heat_prev);
+            SWAP(ref vel_x, ref vel_x_prev);
+            SWAP(ref vel_y, ref vel_y_prev);
+            SWAP(ref density, ref density_prev);
+            SWAP(ref heat, ref heat_prev);
         }
 
         #region simulation functions
@@ -328,7 +331,19 @@ namespace FluidSolver
                         n.X = 0.5f * (curl_xplus1.Length() - curl_xminus1.Length());
                         n.Y = 0.5f * (curl_yplus1.Length() - curl_yminus1.Length());
                         n.Z = 0.5f * (curl_zplus1.Length() - curl_zminus1.Length());
-                        n = Vector3.Normalize(n);
+                        
+                        // safe normalize
+                        if(n.Length() > 0f)
+                        {
+                            float invSqrt = 1f / (float)Math.Sqrt(n.Length());
+                            n.X *= invSqrt;
+                            n.Y *= invSqrt;
+                            n.Z *= invSqrt;
+                        }
+                        else
+                        {
+                            n.X = n.Y = n.Z = 0f;
+                        }
 
                         curl = get_curl(x_prev, y_prev, z_prev, i, j, k);
 
@@ -364,7 +379,7 @@ namespace FluidSolver
             int i0 = (int)(pos.X / h);
             int j0 = (int)(pos.Y / h);
             int k0 = (int)(pos.Z / h);
-            int i1 = Clamp(i0 + 1, 0, n.X - 1);
+            int i1 = Clamp(i0 + 1, 0, n.X - 1); // returns 1??
             int j1 = Clamp(j0 + 1, 0, n.Y - 1);
             int k1 = Clamp(k0 + 1, 0, n.Z - 1);
 
@@ -581,6 +596,33 @@ namespace FluidSolver
                 }
             }
             return true;
+        }
+
+        public void setup_sources_and_forces ()
+        {
+            int ww = (int)(NX * 0.2f);
+            const int hh = 2;
+            int left = NX / 2 - ww / 2;
+            int right = NX / 2 + ww / 2;
+            int bottom = 1;
+            int top = bottom + hh;
+
+            for(int k = 0; k < NZ; k++)
+            {
+                for (int j = 0; j < NY; j++)
+                {
+                    for (int i = 0; i < NX; i++)
+                    {
+
+                        if (i > left && i < right && j > bottom && j < top)
+                        {
+                            int idx = IX(i, j, 0);
+                            density_prev[idx] = 1.0f;
+                            heat_prev[idx] = heat[idx] = 0.1f;
+                        }
+                    }
+                }
+            }
         }
 
         #endregion
