@@ -18,7 +18,18 @@ namespace FluidSolver
         {
             InitializeComponent();
             this.Params = (Params != null) ? Params : new SolverParams();
-            // TODO: setup values from params
+            SetupFormFromParams();
+        }
+
+        private void SetupFormFromParams ()
+        {
+            WidthCtrl.Value = Params.Width;
+            HeightCtrl.Value = Params.Height;
+            DepthCtrl.Value = Params.Depth;
+            ForceCtrl.Value = (decimal)Params.Force;
+            SourceCtrl.Value = (decimal)Params.Source;
+            VorticityCtrl.Checked = Params.Vorticity;
+            dtCtrl.Value = (decimal)Params.Dt;
         }
 
         private void CancelButton_Click(object sender, EventArgs e)

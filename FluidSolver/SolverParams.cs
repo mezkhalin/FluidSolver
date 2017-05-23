@@ -15,8 +15,8 @@ namespace FluidSolver
         public float Viscosity { get; set; }
         public float dt { get; set; }*/
 
-        public int Width        = 64;
-        public int Height       = 64;
+        public int Width        = 32;
+        public int Height       = 32;
         public int Depth        = 1;
         public float Dt         = 0.1f;
         public float Source     = 10f;

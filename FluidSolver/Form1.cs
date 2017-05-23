@@ -38,6 +38,7 @@ namespace FluidSolver
         /// </summary>
         private void NewSimulation ()
         {
+            pauseSim();
             using (NewSimForm form = new NewSimForm(Params))
             {
                 if(form.ShowDialog() == DialogResult.OK)
@@ -45,6 +46,10 @@ namespace FluidSolver
                     solver = new Solver();
                     Params = form.Params;
                     initSim();
+                }
+                else
+                {
+                    resumeSim();
                 }
             }
         }
@@ -69,6 +74,18 @@ namespace FluidSolver
             timer.Start();
         }
 
+        private void pauseSim ()
+        {
+            if (timer == null) return;
+            timer.Stop();
+        }
+
+        private void resumeSim ()
+        {
+            if (timer == null) return;
+            timer.Start();
+        }
+
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
             //if (e.KeyCode == Keys.Space) fs.Init();
@@ -79,9 +96,6 @@ namespace FluidSolver
             HandleInput(solver.DensityFieldPrev, solver.VelXPrev, solver.VelYPrev);
             solver.Step();
             fluidControl.Render(solver.DensityField, solver);
-            /*HandleInput(fs.df_prev, fs.vx_prev, fs.vy_prev);
-            fs.Run();
-            fluidControl.Render(fs.df);*/
         }
 
         private void HandleInput (float[] d, float[] x, float[] y)
@@ -97,12 +111,12 @@ namespace FluidSolver
             if (MouseButtons == MouseButtons.Left)
             {
                 Point vel = fluidControl.MouseVelocity();
-                x[solver.IX(pos.X, pos.Y, 0)] = vel.X * Params.Force;
-                y[solver.IX(pos.X, pos.Y, 0)] = vel.Y * Params.Force;
+                x[solver.IX(pos.X, pos.Y, 0)] = vel.X * Params.Force * Params.Dt;
+                y[solver.IX(pos.X, pos.Y, 0)] = vel.Y * Params.Force * Params.Dt;
             }
             else if (MouseButtons == MouseButtons.Right)
             {
-                d[solver.IX(pos.X, pos.Y, 0)] = Params.Source;
+                d[solver.IX(pos.X, pos.Y, 0)] += Params.Source * Params.Dt;
             }
         }
 

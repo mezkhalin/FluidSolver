@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 /// <summary>
 /// TODO:
 /// CHECK FOR_EACH VERSUS FOR_EACH_INTERNAL
-/// replace clamp function with inline MinMax statements
+/// (replace clamp function with inline MinMax statements)
 /// move initializing of vars from inside for_each to outside
 /// </summary>
 
@@ -68,8 +68,8 @@ namespace FluidSolver
         public int IX(int x, int y, int z) { return (z > 1) ? (x + (y * NX)) : (x + (y * NX) + (z * NX * NY)); }
         public int IXBLAS(int x, int y, int z) { return x + (z * NX) + (y * NX * NZ); }
         public static float MIX(float a, float b, float t) { return ((1.0f) - (t)) * (a) + ((t) * (b)); }
-        public static float Clamp(float x, float min, float max) { return Math.Min(Math.Max(x, min), max); }
-        public static int Clamp(int x, int min, int max) { return Math.Min(Math.Max(x, min), max); }
+        public static float Clamp(float x, float min, float max) { return ((x) > (max)) ? (max) : (((x) < (min)) ? (min) : (x)); }
+        public static int Clamp(int x, int min, int max) { return ((x) > (max)) ? (max) : (((x) < (min)) ? (min) : (x)); }
 
         public static void SWAP(ref float[] a, ref float[] b)
         {
@@ -92,7 +92,6 @@ namespace FluidSolver
             z = Clamp(z, 0, NZ - 1);
             return d[IX(x, y, z)];
         }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool is_obs_cell(int[] obs, int x, int y, int z)
         {
             return get_data(obs, x, y, z) != 0;
@@ -178,7 +177,7 @@ namespace FluidSolver
                 {
                     for (int i = 0; i < NX; i++)
                     {
-                        bool is_obs = is_obs_cell(obs, i, j, k);
+                        //bool is_obs = is_obs_cell(obs, i, j, k);
                         Vector3 pos = new Vector3(i, j, k);
                         Vector3 orig_vel = new Vector3(x_prev[IX(i, j, k)], y_prev[IX(i, j, k)], z_prev[IX(i, j, k)]);
 
@@ -312,11 +311,11 @@ namespace FluidSolver
 
             Vector3 n = new Vector3(), f = new Vector3();
 
-            for(int k = 0; k < NZ; k++)
+            for(int k = 1; k < NZ - 1; k++)
             {
-                for(int j = 0; j < NY; j++)
+                for(int j = 1; j < NY - 1; j++)
                 {
-                    for(int i = 0; i < NX; i++)
+                    for(int i = 1; i < NX - 1; i++)
                     {
                         // calculate gradient of curl magnitude
                         curl_xplus1 = get_curl(x_prev, y_prev, z_prev, i + 1, j, k);
