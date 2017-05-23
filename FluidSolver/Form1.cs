@@ -107,7 +107,7 @@ namespace FluidSolver
         {
             HandleInput(solver.DensityFieldPrev, solver.VelXPrev, solver.VelYPrev);
             solver.Step();
-            fluidControl.Render(solver, RenderMode.Density);
+            fluidControl.Render(solver, renderMode, renderObstacles);
         }
 
         private void HandleInput (float[] d, float[] x, float[] y)
@@ -156,10 +156,9 @@ namespace FluidSolver
             NewSimulation();
         }
 
-        #endregion
-
         private void toolStripPaintMode_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
+            toolStripPaintMode.Image = e.ClickedItem.Image;
             UncheckDropDownItems(e.ClickedItem as ToolStripMenuItem);
             switch(e.ClickedItem.AccessibleName)
             {
@@ -170,6 +169,29 @@ namespace FluidSolver
                     paintMode = PaintMode.Obstacle;
                     break;
             }
+        }
+
+        private void toolStripRenderMode_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            toolStripRenderMode.Image = e.ClickedItem.Image;
+            UncheckDropDownItems(e.ClickedItem as ToolStripMenuItem);
+            switch (e.ClickedItem.AccessibleName)
+            {
+                case "Density":
+                    renderMode = RenderMode.Density;
+                    break;
+                case "Heat":
+                    renderMode = RenderMode.Heat;
+                    break;
+                case "Pressure":
+                    renderMode = RenderMode.Pressure;
+                    break;
+            }
+        }
+
+        private void toolStripRenderObst_Click(object sender, EventArgs e)
+        {
+            renderObstacles = toolStripRenderObst.Checked;
         }
 
         /// <summary>
@@ -194,5 +216,7 @@ namespace FluidSolver
                 (ltoolStripMenuItem).Checked = false;
             }
         }
+
+        #endregion
     }
 }

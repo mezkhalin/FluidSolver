@@ -28,12 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripNew = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripRenderObst = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripNew = new System.Windows.Forms.ToolStripButton();
             this.toolStripPaintMode = new System.Windows.Forms.ToolStripDropDownButton();
             this.densityToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.pressureToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,6 +40,7 @@
             this.densityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.heatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pressureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripRenderObst = new System.Windows.Forms.ToolStripButton();
             this.fluidControl = new FluidSolver.FluidControl();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -53,23 +53,14 @@
             this.toolStripNew,
             this.toolStripSeparator1,
             this.toolStripPaintMode,
-            this.toolStripRenderObst,
-            this.toolStripRenderMode});
+            this.toolStripSeparator2,
+            this.toolStripRenderMode,
+            this.toolStripRenderObst});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(284, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
-            // 
-            // toolStripNew
-            // 
-            this.toolStripNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripNew.Image = global::FluidSolver.Properties.Resources.NewFile_16x_24;
-            this.toolStripNew.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripNew.Name = "toolStripNew";
-            this.toolStripNew.Size = new System.Drawing.Size(23, 22);
-            this.toolStripNew.Text = "toolStripNew";
-            this.toolStripNew.Click += new System.EventHandler(this.toolStripNew_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -91,17 +82,20 @@
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
-            // toolStripRenderObst
+            // toolStripSeparator2
             // 
-            this.toolStripRenderObst.Checked = true;
-            this.toolStripRenderObst.CheckOnClick = true;
-            this.toolStripRenderObst.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolStripRenderObst.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripRenderObst.Image = ((System.Drawing.Image)(resources.GetObject("toolStripRenderObst.Image")));
-            this.toolStripRenderObst.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripRenderObst.Name = "toolStripRenderObst";
-            this.toolStripRenderObst.Size = new System.Drawing.Size(23, 22);
-            this.toolStripRenderObst.Text = "toolStripRenderObst";
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripNew
+            // 
+            this.toolStripNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripNew.Image = global::FluidSolver.Properties.Resources.NewFile_16x_24;
+            this.toolStripNew.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripNew.Name = "toolStripNew";
+            this.toolStripNew.Size = new System.Drawing.Size(23, 22);
+            this.toolStripNew.Text = "toolStripNew";
+            this.toolStripNew.Click += new System.EventHandler(this.toolStripNew_Click);
             // 
             // toolStripPaintMode
             // 
@@ -109,7 +103,7 @@
             this.toolStripPaintMode.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.densityToolStripMenuItem2,
             this.pressureToolStripMenuItem1});
-            this.toolStripPaintMode.Image = ((System.Drawing.Image)(resources.GetObject("toolStripPaintMode.Image")));
+            this.toolStripPaintMode.Image = global::FluidSolver.Properties.Resources.Cloud_16x_24;
             this.toolStripPaintMode.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripPaintMode.Name = "toolStripPaintMode";
             this.toolStripPaintMode.Size = new System.Drawing.Size(29, 22);
@@ -119,15 +113,21 @@
             // densityToolStripMenuItem2
             // 
             this.densityToolStripMenuItem2.AccessibleName = "Density";
+            this.densityToolStripMenuItem2.Checked = true;
+            this.densityToolStripMenuItem2.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.densityToolStripMenuItem2.Image = global::FluidSolver.Properties.Resources.Cloud_16x_24;
+            this.densityToolStripMenuItem2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.densityToolStripMenuItem2.Name = "densityToolStripMenuItem2";
-            this.densityToolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
+            this.densityToolStripMenuItem2.Size = new System.Drawing.Size(125, 22);
             this.densityToolStripMenuItem2.Text = "Density";
             // 
             // pressureToolStripMenuItem1
             // 
             this.pressureToolStripMenuItem1.AccessibleName = "Obstacles";
+            this.pressureToolStripMenuItem1.Image = global::FluidSolver.Properties.Resources.ActionTool_16x_24;
+            this.pressureToolStripMenuItem1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.pressureToolStripMenuItem1.Name = "pressureToolStripMenuItem1";
-            this.pressureToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.pressureToolStripMenuItem1.Size = new System.Drawing.Size(125, 22);
             this.pressureToolStripMenuItem1.Text = "Obstacles";
             // 
             // toolStripRenderMode
@@ -137,15 +137,20 @@
             this.densityToolStripMenuItem,
             this.heatToolStripMenuItem,
             this.pressureToolStripMenuItem});
-            this.toolStripRenderMode.Image = ((System.Drawing.Image)(resources.GetObject("toolStripRenderMode.Image")));
+            this.toolStripRenderMode.Image = global::FluidSolver.Properties.Resources.Cloud_16x_24;
             this.toolStripRenderMode.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripRenderMode.Name = "toolStripRenderMode";
             this.toolStripRenderMode.Size = new System.Drawing.Size(29, 22);
             this.toolStripRenderMode.Text = "toolStripDropDownButton2";
+            this.toolStripRenderMode.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStripRenderMode_DropDownItemClicked);
             // 
             // densityToolStripMenuItem
             // 
             this.densityToolStripMenuItem.AccessibleName = "Density";
+            this.densityToolStripMenuItem.Checked = true;
+            this.densityToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.densityToolStripMenuItem.Image = global::FluidSolver.Properties.Resources.Cloud_16x_24;
+            this.densityToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.densityToolStripMenuItem.Name = "densityToolStripMenuItem";
             this.densityToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.densityToolStripMenuItem.Text = "Density";
@@ -153,6 +158,8 @@
             // heatToolStripMenuItem
             // 
             this.heatToolStripMenuItem.AccessibleName = "Heat";
+            this.heatToolStripMenuItem.Image = global::FluidSolver.Properties.Resources.Important_16x_24;
+            this.heatToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.heatToolStripMenuItem.Name = "heatToolStripMenuItem";
             this.heatToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.heatToolStripMenuItem.Text = "Heat";
@@ -160,9 +167,24 @@
             // pressureToolStripMenuItem
             // 
             this.pressureToolStripMenuItem.AccessibleName = "Pressure";
+            this.pressureToolStripMenuItem.Image = global::FluidSolver.Properties.Resources.PolarChart_16x_24;
+            this.pressureToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.pressureToolStripMenuItem.Name = "pressureToolStripMenuItem";
             this.pressureToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.pressureToolStripMenuItem.Text = "Pressure";
+            // 
+            // toolStripRenderObst
+            // 
+            this.toolStripRenderObst.Checked = true;
+            this.toolStripRenderObst.CheckOnClick = true;
+            this.toolStripRenderObst.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripRenderObst.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripRenderObst.Image = global::FluidSolver.Properties.Resources.ToggleButton_16x_24;
+            this.toolStripRenderObst.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripRenderObst.Name = "toolStripRenderObst";
+            this.toolStripRenderObst.Size = new System.Drawing.Size(23, 22);
+            this.toolStripRenderObst.Text = "toolStripRenderObst";
+            this.toolStripRenderObst.Click += new System.EventHandler(this.toolStripRenderObst_Click);
             // 
             // fluidControl
             // 
@@ -204,6 +226,7 @@
         private System.Windows.Forms.ToolStripMenuItem densityToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem heatToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pressureToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     }
 }
 

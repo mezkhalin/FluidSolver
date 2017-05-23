@@ -63,9 +63,59 @@ namespace FluidSolver.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ActionTool_16x_24 {
+            get {
+                object obj = ResourceManager.GetObject("ActionTool_16x_24", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Cloud_16x_24 {
+            get {
+                object obj = ResourceManager.GetObject("Cloud_16x_24", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Important_16x_24 {
+            get {
+                object obj = ResourceManager.GetObject("Important_16x_24", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap NewFile_16x_24 {
             get {
                 object obj = ResourceManager.GetObject("NewFile_16x_24", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PolarChart_16x_24 {
+            get {
+                object obj = ResourceManager.GetObject("PolarChart_16x_24", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ToggleButton_16x_24 {
+            get {
+                object obj = ResourceManager.GetObject("ToggleButton_16x_24", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
