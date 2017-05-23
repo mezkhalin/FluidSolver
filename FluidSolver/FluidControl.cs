@@ -11,6 +11,13 @@ using System.Windows.Forms;
 
 namespace FluidSolver
 {
+    public enum RenderMode
+    {
+        Density,
+        Heat,
+        Pressure
+    }
+
     public partial class FluidControl : UserControl
     {
         public void GridSize (int width, int height)
@@ -92,8 +99,17 @@ namespace FluidSolver
             return vel;
         }
 
-        public void Render (float[] src, Solver solver)
+        public void Render (Solver solver, RenderMode renderMode, bool drawObstacles = true)
         {
+            float[] src;
+            switch(renderMode)
+            {
+                default:
+                case RenderMode.Density:
+                    src = solver.DensityField;
+                    break;
+            }
+
             bmData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadWrite, bitmap.PixelFormat);
 
             int pos, x, y;
@@ -104,6 +120,15 @@ namespace FluidSolver
                 for (x = 0; x < width; x++)
                 {
                     pos = (x << 2) + y * (width << 2); // position in byte array (x*4)+y*(w*4)
+                    if(drawObstacles)
+                    {
+                        if(solver.Obstacles[solver.IX(x,y,0)] != 0)
+                        {
+                            tmpData[pos] = tmpData[pos + 1] = 0;
+                            tmpData[pos + 2] = tmpData[pos + 3] = 255;
+                            continue;
+                        }
+                    }
                     val = (byte)(Math.Max( Math.Min( src[solver.IX(x, y, 0)], 1f), 0f) * 255);
                     tmpData[pos] = tmpData[pos + 1] = tmpData[pos + 2] = val;   // BGR
                     tmpData[pos + 3] = 255; // alpha

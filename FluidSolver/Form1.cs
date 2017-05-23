@@ -11,12 +11,24 @@ using System.Windows.Forms;
 
 namespace FluidSolver
 {
+    public enum PaintMode
+    {
+        Density,
+        Obstacle
+    }
+
     public partial class Form1 : Form
     {
         private Solver solver;
         private SolverParams Params;
 
         private Timer timer;
+
+        #region UI related
+        private PaintMode paintMode = PaintMode.Density;
+        private RenderMode renderMode = RenderMode.Density;
+        private bool renderObstacles = true;
+        #endregion
 
         public Form1()
         {
@@ -95,7 +107,7 @@ namespace FluidSolver
         {
             HandleInput(solver.DensityFieldPrev, solver.VelXPrev, solver.VelYPrev);
             solver.Step();
-            fluidControl.Render(solver.DensityField, solver);
+            fluidControl.Render(solver, RenderMode.Density);
         }
 
         private void HandleInput (float[] d, float[] x, float[] y)
@@ -116,7 +128,15 @@ namespace FluidSolver
             }
             else if (MouseButtons == MouseButtons.Right)
             {
-                d[solver.IX(pos.X, pos.Y, 0)] += Params.Source * Params.Dt;
+                switch(paintMode)
+                {
+                    case PaintMode.Density:
+                        solver.DensityFieldPrev[solver.IX(pos.X, pos.Y, 0)] += Params.Source * Params.Dt;
+                        break;
+                    case PaintMode.Obstacle:
+                        solver.Obstacles[solver.IX(pos.X, pos.Y, 0)] = 1;
+                        break;
+                }
             }
         }
 
@@ -137,5 +157,42 @@ namespace FluidSolver
         }
 
         #endregion
+
+        private void toolStripPaintMode_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            UncheckDropDownItems(e.ClickedItem as ToolStripMenuItem);
+            switch(e.ClickedItem.AccessibleName)
+            {
+                case "Density":
+                    paintMode = PaintMode.Density;
+                    break;
+                case "Obstacles":
+                    paintMode = PaintMode.Obstacle;
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Unchecks all other drop down items from the parent list of selectedItem
+        /// selectedItem itself is excluded and remains only checked item
+        /// </summary>
+        /// <param name="item"></param>
+        private void UncheckDropDownItems (ToolStripMenuItem selectedItem)
+        {
+            selectedItem.Checked = true;
+
+            // Select the other MenuItens from the ParentMenu(OwnerItens) and unchecked this,
+            // The current Linq Expression verify if the item is a real ToolStripMenuItem
+            // and if the item is a another ToolStripMenuItem to uncheck this.
+            foreach (var ltoolStripMenuItem in (from object
+                                                    item in selectedItem.Owner.Items
+                                                let ltoolStripMenuItem = item as ToolStripMenuItem
+                                                where ltoolStripMenuItem != null
+                                                where !item.Equals(selectedItem)
+                                                select ltoolStripMenuItem))
+            {
+                (ltoolStripMenuItem).Checked = false;
+            }
+        }
     }
 }

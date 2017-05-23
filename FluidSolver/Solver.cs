@@ -32,6 +32,7 @@ namespace FluidSolver
         public float[] DensityFieldPrev { get { return density_prev; } }
         public float[] VelXPrev { get { return vel_x_prev; } }
         public float[] VelYPrev { get { return vel_y_prev; } }
+        public int[] Obstacles { get { return obstacles; } }
 
         private int NX, NY, NZ; // number of cells
         private IntPos dims;    // total dimensions
@@ -492,8 +493,7 @@ namespace FluidSolver
                 }
             }
         }
-
-        //pressure_apply_with_obstacles(x, y, z, pressure, obs, dt);
+        
         private void pressure_apply_with_obs (float[] x, float[] y, float[] z,
                                               float[] pressure, int[] obs)
         {
@@ -571,8 +571,7 @@ namespace FluidSolver
                 }
             }
         }
-
-        //check_divergence(x, y, z);
+        
         private bool check_divergence (float[] x, float[] y, float[] z)
         {
             for (int k = 0; k < NZ; k++)
@@ -595,33 +594,6 @@ namespace FluidSolver
                 }
             }
             return true;
-        }
-
-        public void setup_sources_and_forces ()
-        {
-            int ww = (int)(NX * 0.2f);
-            const int hh = 2;
-            int left = NX / 2 - ww / 2;
-            int right = NX / 2 + ww / 2;
-            int bottom = 1;
-            int top = bottom + hh;
-
-            for(int k = 0; k < NZ; k++)
-            {
-                for (int j = 0; j < NY; j++)
-                {
-                    for (int i = 0; i < NX; i++)
-                    {
-
-                        if (i > left && i < right && j > bottom && j < top)
-                        {
-                            int idx = IX(i, j, 0);
-                            density_prev[idx] = 1.0f;
-                            heat_prev[idx] = heat[idx] = 0.1f;
-                        }
-                    }
-                }
-            }
         }
 
         #endregion
