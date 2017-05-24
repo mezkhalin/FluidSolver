@@ -34,10 +34,10 @@ namespace FluidSolver
         {
             InitializeComponent();
 
-            Load += Form1_Load;
+            Shown += Form1_Shown;
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void Form1_Shown(object sender, EventArgs e)
         {
             NewSimulation();
 
@@ -100,17 +100,18 @@ namespace FluidSolver
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
+            Console.WriteLine("> " + e.KeyCode);
             //if (e.KeyCode == Keys.Space) fs.Init();
         }
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            HandleInput(solver.DensityFieldPrev, solver.VelXPrev, solver.VelYPrev);
+            HandleInput();
             solver.Step();
             fluidControl.Render(solver, renderMode, renderObstacles);
         }
 
-        private void HandleInput (float[] d, float[] x, float[] y)
+        private void HandleInput ()
         {
             //solver.setup_sources_and_forces();
 
@@ -123,8 +124,8 @@ namespace FluidSolver
             if (MouseButtons == MouseButtons.Left)
             {
                 Point vel = fluidControl.MouseVelocity();
-                x[solver.IX(pos.X, pos.Y, 0)] = vel.X * Params.Force * Params.Dt;
-                y[solver.IX(pos.X, pos.Y, 0)] = vel.Y * Params.Force * Params.Dt;
+                solver.VelXPrev[solver.IX(pos.X, pos.Y, 0)] = vel.X * Params.Force * Params.Dt;
+                solver.VelYPrev[solver.IX(pos.X, pos.Y, 0)] = vel.Y * Params.Force * Params.Dt;
             }
             else if (MouseButtons == MouseButtons.Right)
             {
@@ -138,15 +139,6 @@ namespace FluidSolver
                         break;
                 }
             }
-        }
-
-        private Point trans_point(Point p)
-        {
-            p.X = (int)((p.X / (float)ClientSize.Width) * Params.Height + 1);
-            p.Y = (int)((p.Y / (float)ClientSize.Height) * Params.Height + 1);
-            if (p.X < 1) p.X = 1; if (p.X > Params.Height) p.X = Params.Height;
-            if (p.Y < 1) p.Y = 1; if (p.Y > Params.Height) p.Y = Params.Height;
-            return p;
         }
 
         #region Toolstrip Handlers

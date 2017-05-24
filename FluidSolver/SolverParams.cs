@@ -8,19 +8,14 @@ namespace FluidSolver
 {
     public class SolverParams
     {
-        /*
-        public int Width { get; set; }
-        public int Height { get; set; }
-        public float Diffusion { get; set; }
-        public float Viscosity { get; set; }
-        public float dt { get; set; }*/
-
         public int Width        = 32;
         public int Height       = 32;
         public int Depth        = 1;
         public float Dt         = 0.1f;
+        public float Tamb       = 0f; // ambient temperature
         public float Source     = 10f;
         public float Force      = 10f;
         public bool Vorticity   = true;   // vorticity confinement
+        public bool Temperature = true;   // simulate temperature?
     }
 }

@@ -40,10 +40,12 @@ namespace FluidSolver
 
         private float dt;   // simulation time step
         private float dt_inv; // negative time step * NX
-        private float force, source;    // might be default strengths
+        private float force, source;    // default values of user velocity/density
+        private float tAmb; // ambient temperature
 
         #region flags
         private bool vorticity;
+        private bool temperature;
         #endregion
 
         #region data fields
@@ -120,6 +122,8 @@ namespace FluidSolver
 
             force = param.Force;
             source = param.Source;
+            tAmb = param.Tamb;
+            temperature = param.Temperature;
             vorticity = param.Vorticity;
 
             vel_x       = new float[array_size];
@@ -147,11 +151,15 @@ namespace FluidSolver
         public void Step()
         {
             advect_vel_RK2(vel_x, vel_y, vel_z, vel_x_prev, vel_y_prev, vel_z_prev, obstacles);
-            //Bouyance should be considered an external force and should be applied immediately after velocity advection
-            buoyancy(vel_y, heat);
-            //Need to advect heat
-            advect_RK2(heat, heat_prev, vel_x, vel_y, vel_z, obstacles);
-            //maybe damp it too
+
+            if (temperature)
+            {
+                //Bouyance should be considered an external force and should be applied immediately after velocity advection
+                buoyancy(vel_y, heat);
+                //Need to advect heat
+                advect_RK2(heat, heat_prev, vel_x, vel_y, vel_z, obstacles);
+                //maybe damp it too
+            }
             
             project(vel_x, vel_y, vel_z, divergence, pressure, pressure_prev, obstacles);
 
@@ -283,13 +291,12 @@ namespace FluidSolver
 
         private void buoyancy (float[] x, float[] temp)
         {
-            float Tamb = 0f; //ambient temp
             float a = 0.0000625f;
             float b = 0.025f;
 
             for(int i = 0; i < array_size; i++)
             {
-                x[i] -= a * temp[i] + -b * (temp[i] - Tamb);
+                x[i] -= a * temp[i] + -b * (temp[i] - (tAmb * dt));
             }
         }
 

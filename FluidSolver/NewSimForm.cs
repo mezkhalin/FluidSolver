@@ -30,6 +30,8 @@ namespace FluidSolver
             SourceCtrl.Value = (decimal)Params.Source;
             VorticityCtrl.Checked = Params.Vorticity;
             dtCtrl.Value = (decimal)Params.Dt;
+            TempCtrl.Value = (decimal)Params.Tamb;
+            SimTempCtrl.Checked = Params.Temperature;
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
@@ -43,6 +45,11 @@ namespace FluidSolver
             dtCtrl.Enabled = !dtAutoCheckBox.Checked;
         }
 
+        private void SimTempCtrl_CheckedChanged(object sender, EventArgs e)
+        {
+            TempCtrl.Enabled = !SimTempCtrl.Checked;
+        }
+
         private void CreateButton_Click(object sender, EventArgs e)
         {
             Params.Width = (int)WidthCtrl.Value;
@@ -52,6 +59,8 @@ namespace FluidSolver
             Params.Source = (float)SourceCtrl.Value;
             Params.Vorticity = VorticityCtrl.Checked;
             Params.Dt = (dtAutoCheckBox.Enabled) ? (60 / 1000f) : (float)dtCtrl.Value;
+            Params.Tamb = (float)TempCtrl.Value;
+            Params.Temperature = SimTempCtrl.Checked;
 
             DialogResult = DialogResult.OK;
             Close();
