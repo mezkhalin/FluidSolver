@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 /// <summary>
 /// TODO:
-/// CHECK FOR_EACH VERSUS FOR_EACH_INTERNAL
+/// invert y direction
 /// (replace clamp function with inline MinMax statements)
 /// move initializing of vars from inside for_each to outside
 /// </summary>
@@ -33,6 +33,8 @@ namespace FluidSolver
         public float[] VelXPrev { get { return vel_x_prev; } }
         public float[] VelYPrev { get { return vel_y_prev; } }
         public int[] Obstacles { get { return obstacles; } }
+        public float[] HeatField { get { return heat_prev; } }
+        public float[] PressureField { get { return pressure; } }
 
         private int NX, NY, NZ; // number of cells
         private IntPos dims;    // total dimensions
@@ -170,6 +172,7 @@ namespace FluidSolver
 
             SWAP(ref vel_x, ref vel_x_prev);
             SWAP(ref vel_y, ref vel_y_prev);
+            SWAP(ref vel_z, ref vel_z_prev);
             SWAP(ref density, ref density_prev);
             SWAP(ref heat, ref heat_prev);
         }
@@ -296,7 +299,7 @@ namespace FluidSolver
 
             for(int i = 0; i < array_size; i++)
             {
-                x[i] -= a * temp[i] + -b * (temp[i] - (tAmb * dt));
+                x[i] -= (a * temp[i] + -b * (temp[i] - tAmb * dt) * dt);
             }
         }
 

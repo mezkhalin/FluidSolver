@@ -26,6 +26,11 @@ namespace FluidSolver
             this.height = height;
             Init();
         }
+
+        private float rminVal = float.MaxValue;  // render min/max values
+        private float rmaxVal = float.MinValue;
+        private float rminValOld = 0f;
+        private float rmaxValOld = 1f;
         
         private int width = 2;
         private int height = 2;
@@ -37,6 +42,11 @@ namespace FluidSolver
         public bool MouseIsDown { get {return mouseDown;} }
         private bool mouseDown = false;
         private Point mousePrevPos;
+
+        private static float map (float value, float low1, float high1, float low2, float high2)
+        {
+            return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+        }
 
         public FluidControl()
         {
@@ -108,19 +118,28 @@ namespace FluidSolver
                 case RenderMode.Density:
                     src = solver.DensityField;
                     break;
+                case RenderMode.Heat:
+                    src = solver.HeatField;
+                    break;
+                case RenderMode.Pressure:
+                    src = solver.PressureField;
+                    break;
             }
 
             bmData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadWrite, bitmap.PixelFormat);
 
             int pos, x, y;
-            byte val;
+            float val;
+            float r, g, b;
 
             for (y = 0; y < height; y++)
             {
                 for (x = 0; x < width; x++)
                 {
                     pos = (x << 2) + y * (width << 2); // position in byte array (x*4)+y*(w*4)
-                    if(drawObstacles)
+
+                    // obstacles takes precedence
+                    if (drawObstacles)   
                     {
                         if(solver.Obstacles[solver.IX(x,y,0)] != 0)
                         {
@@ -129,17 +148,69 @@ namespace FluidSolver
                             continue;
                         }
                     }
-                    val = (byte)(Math.Max( Math.Min( src[solver.IX(x, y, 0)], 1f), 0f) * 255);
+
+                    val = src[solver.IX(x, y, 0)];
+                    rminVal = Math.Min(val, rminVal);
+                    rmaxVal = Math.Max(val, rmaxVal);
+
+                    // get RGB values depending on render mode
+                    switch (renderMode)
+                    {
+                        default:
+                        case RenderMode.Density:
+                            render_density(val, out r, out g, out b);
+                            break;
+                        case RenderMode.Heat:
+                            render_heat(val, out r, out g, out b);
+                            break;
+                        case RenderMode.Pressure:
+                            render_pressure(val, out r, out g, out b);
+                            break;
+                    }
+
+                    // update bitmap
+                    tmpData[pos]     = (byte)(b * 255);
+                    tmpData[pos + 1] = (byte)(g * 255);
+                    tmpData[pos + 2] = (byte)(r * 255);
+                    tmpData[pos + 3] = 255;
+
+                    /*val = (byte)(Math.Max( Math.Min( src[solver.IX(x, y, 0)], 1f), 0f) * 255);
                     tmpData[pos] = tmpData[pos + 1] = tmpData[pos + 2] = val;   // BGR
-                    tmpData[pos + 3] = 255; // alpha
+                    tmpData[pos + 3] = 255; // alpha*/
                 }
             }
+
+            rminValOld = rminVal;
+            rmaxValOld = rmaxVal;
+            rminVal = float.MaxValue;
+            rmaxVal = float.MinValue;
 
             System.Runtime.InteropServices.Marshal.Copy(tmpData, 0, bmData.Scan0, tmpData.Length);
 
             bitmap.UnlockBits(bmData);
 
             Invalidate();
+        }
+
+        private void render_density (float val, out float r, out float g, out float b)
+        {
+            val = Math.Min(Math.Max(val, 0f), 1f);
+            r = g = b = val;
+        }
+
+        private void render_pressure (float val, out float r, out float g, out float b)
+        {
+            val = map(val, rminValOld, rmaxValOld, 0f, 1f);
+            r = g = 0f;
+            b = val;
+        }
+
+        private void render_heat(float val, out float r, out float g, out float b)
+        {
+            float ratio = 2f * (val - rminValOld) / (rmaxValOld - rminValOld);
+            b = Math.Max(0f, 1f - ratio);
+            r = Math.Max(0f, ratio - 1f);
+            g = 1f - b - r;
         }
     }
 }

@@ -113,6 +113,8 @@ namespace FluidSolver
 
         private void HandleInput ()
         {
+            for (int x = (Params.Width / 2) - 5; x < (Params.Width / 2) + 5; x++)
+                solver.HeatField[solver.IX(x, Params.Height - 5, 0)] += 25f * Params.Dt;
             //solver.setup_sources_and_forces();
 
             if (!fluidControl.MouseIsDown) return;
